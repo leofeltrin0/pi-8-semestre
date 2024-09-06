@@ -1,0 +1,11 @@
+version: '3'
+services:
+  stt-service:
+    build: ./stt
+    ports:
+      - "8000:8000"
+    volumes:
+      - C:/Users/leomo/Documents/whisper-test:/app/whisper-test
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
