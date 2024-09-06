@@ -1,20 +1,19 @@
-# stt/api.py
 from fastapi import FastAPI, UploadFile, File, HTTPException
-from pydantic import BaseModel
 from io import BytesIO
 import uvicorn
-
 from audio_processing import transcribe_audio
 
 app = FastAPI()
 
-class Data(BaseModel):
-    audio_path: str
-
 @app.post("/transcribe/")
-async def transcribe_audio_endpoint(input: Data):
+async def transcribe_audio_endpoint(file: UploadFile = File(...)):
     try:
-        transcription = transcribe_audio(input.audio_path)
+        # Read the content of the uploaded file
+        audio_data = await file.read()
+        
+        # Pass the audio data to the transcription function
+        transcription = transcribe_audio(BytesIO(audio_data))
+        
         return {"transcription": transcription}
     
     except RuntimeError as e:

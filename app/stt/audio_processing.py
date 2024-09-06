@@ -1,8 +1,8 @@
-# stt/audio_processing.py
 import librosa
 import numpy as np
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 import torch
+from io import BytesIO
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -20,9 +20,12 @@ def split_audio(audio, sr, chunk_duration=30):
     
     return chunks
 
-def transcribe_audio(audio_path):
+def transcribe_audio(audio_file: BytesIO):
     try:
-        data, samplerate = librosa.load(audio_path, sr=16000)
+        # Load the audio from the BytesIO object
+        data, samplerate = librosa.load(audio_file, sr=16000)
+        
+        # Split audio into chunks
         audio_chunks = split_audio(data, samplerate, chunk_duration=30)
         transcriptions = []
 
