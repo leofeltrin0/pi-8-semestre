@@ -7,7 +7,7 @@ from llm.model_pipeline import TextGenerationPipeline
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-model_id = "openai/whisper-small"
+model_id = "openai/whisper-large"
 processor = WhisperProcessor.from_pretrained(model_id)
 model = WhisperForConditionalGeneration.from_pretrained(model_id).to(device)
 forced_decoder_ids = processor.get_decoder_prompt_ids(language="portuguese", task="transcribe")
