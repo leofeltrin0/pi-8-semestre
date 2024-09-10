@@ -3,13 +3,15 @@ import numpy as np
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 import torch
 from io import BytesIO
+from llm.model_pipeline import TextGenerationPipeline
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-model_id = "openai/whisper-large"
+model_id = "openai/whisper-small"
 processor = WhisperProcessor.from_pretrained(model_id)
 model = WhisperForConditionalGeneration.from_pretrained(model_id).to(device)
 forced_decoder_ids = processor.get_decoder_prompt_ids(language="portuguese", task="transcribe")
+llm_model = TextGenerationPipeline("meta-llama/Meta-Llama-3.1-8B-Instruct")
 
 def split_audio(audio, sr, chunk_duration=30):
     """Split audio into chunks of `chunk_duration` seconds."""
@@ -40,3 +42,6 @@ def transcribe_audio(audio_file: BytesIO):
     
     except Exception as e:
         raise RuntimeError(f"Error in transcribing audio: {str(e)}")
+    
+def summarize(msg: str):
+    return llm_model.generate_text(msg)
