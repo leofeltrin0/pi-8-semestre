@@ -44,4 +44,7 @@ def transcribe_audio(audio_file: BytesIO):
         raise RuntimeError(f"Error in transcribing audio: {str(e)}")
     
 def summarize(msg: str):
-    return llm_model.generate_text(msg)
+    return llm_model.summarize(msg)
+
+def interact_with_llm(msg: str):
+    return llm_model.interact_with_llm(msg)
